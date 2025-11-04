@@ -18,7 +18,16 @@ const ROLE_GUARDS: Array<{ prefix: string; role: string }> = [
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('auth_token')?.value;
-  const role = req.cookies.get('auth_role')?.value as string | undefined;
+  const userInfoCookie = req.cookies.get('user_info')?.value;
+
+  let role: string | undefined;
+  if (userInfoCookie) {
+    try {
+      const userInfo = JSON.parse(userInfoCookie);
+      role = userInfo?.role;
+    } catch (e) { /* Ignorar error de parseo */ }
+  }
+
   const isAdmin = role === 'admin' || role === 'Administrador';
   const isStudent = role === 'student' || role === 'Estudiante';
 

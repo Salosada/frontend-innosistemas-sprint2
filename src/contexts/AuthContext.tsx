@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(null);
     deleteCookie('auth_token');
     deleteCookie('refresh_token');
+    deleteCookie('auth_role'); // Limpieza adicional por si existiera
     deleteCookie('user_info');
   }, [user?.email]);
 
