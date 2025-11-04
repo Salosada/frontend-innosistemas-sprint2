@@ -180,7 +180,7 @@ export default function StudentDashboard() {
     setShowTeamActionsModal(true);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: Team['status'] | undefined) => {
     switch (status) {
       case 'forming':
         return 'bg-yellow-100 text-yellow-800';
@@ -195,7 +195,7 @@ export default function StudentDashboard() {
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status: Team['status'] | undefined) => {
     switch (status) {
       case 'forming':
         return 'En Formación';

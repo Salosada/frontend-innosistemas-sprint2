@@ -245,7 +245,7 @@ export interface Team {
   creatorId: string;
   projectId: string;
   members: Student[];
-  status?: 'forming' | 'active' | 'completed' | 'incomplete';
+  status: 'forming' | 'active' | 'completed' | 'incomplete';
   createdAt: Date;
   updatedAt?: Date;
 }
