@@ -1,6 +1,6 @@
-﻿'use client';
+﻿﻿'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { UserInfo, AuthContextType, LoginRequest, TokenResponse } from '@/types';
 import { AuthService } from '@/services/auth';
 import { setCookie, deleteCookie, getCookie } from '@/utils/cookies';
@@ -20,7 +20,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     if (user?.email) {
       AuthService.logout(user.email).catch(console.error);
     }
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     deleteCookie('auth_token');
     deleteCookie('refresh_token');
     deleteCookie('user_info');
-  };
+  }, [user?.email]); // user.email es una dependencia para la llamada a la API de logout
 
   useEffect(() => {
     const storedToken = getCookie('auth_token');
@@ -41,14 +41,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userInfoCookie = getCookie('user_info');
         if (userInfoCookie && userInfoCookie !== 'undefined') {
           const userInfo = JSON.parse(userInfoCookie);
-          if (userInfo.email) {
+          // Validación robusta para asegurar que userInfo cumple con la interfaz UserInfo
+          if (typeof userInfo.id === 'string' && typeof userInfo.email === 'string' &&
+              typeof userInfo.name === 'string' && typeof userInfo.role === 'string' &&
+              Array.isArray(userInfo.permissions)) {
             setUser(userInfo);
+          } else {
+            console.error('Información de usuario incompleta o malformada en la cookie, cerrando sesión.');
+            logout(); // Cerrar sesión si la información de usuario en la cookie es incompleta o malformada
           }
         }
       } catch (error) {
         console.error('Error parsing user info:', error);
         logout();
       }
+    }
+    // Si no hay storedToken, o si el parseo falló, asegurar que el estado de usuario sea null
+    else {
+      logout(); // Limpiar el estado de autenticación si no hay token o el parseo falló
     }
     setIsLoading(false);
   }, [logout]);
