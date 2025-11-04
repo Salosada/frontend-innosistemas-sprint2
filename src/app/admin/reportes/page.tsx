@@ -191,7 +191,7 @@ export default function ReportesPage() {
               >
                 <option value="all">Todos los cursos</option>
                 {SOFTWARE_ENGINEERING_COURSES.map(course => (
-                  <option key={course.id} value={course.name}>{course.name}</option>
+                  <option key={course.idCourse} value={course.nameCourse}>{course.nameCourse}</option>
                 ))}
               </select>
             </div>
