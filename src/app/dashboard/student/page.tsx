@@ -20,20 +20,19 @@ export default function StudentDashboard() {
     {
       id: 'team1',
       name: 'Equipo Alpha',
-      courseId: '1', // Corregido para usar ID numérico como string
+      courseId: '1',
       creatorId: 'student1',
+      projectId: 'proj1', // Añadido projectId requerido
       members: [
         {
           id: 'student1',
           name: 'Juan Pérez',
           email: 'juan.perez@udea.edu.co',
-          courseIds: ['1']
         },
         {
           id: 'student2',
           name: 'María García',
           email: 'maria.garcia@udea.edu.co',
-          courseIds: ['1']
         }
       ],
       status: 'active',
@@ -82,13 +81,13 @@ export default function StudentDashboard() {
     unreadNotifications: notifications.filter(n => !n.read).length
   };
 
-  const handleCreateTeam = (newTeam: Omit<Team, 'id' | 'createdAt'>) => {
+  const handleCreateTeam = (newTeam: Omit<Team, 'id' | 'createdAt' | 'updatedAt'>) => {
     const team: Team = {
       ...newTeam,
       id: `team_${Date.now()}`,
       createdAt: new Date(),
+      updatedAt: new Date()
     };
-
     setMyTeams(prev => [...prev, team]);
 
     // Crear notificaciones para los miembros invitados
