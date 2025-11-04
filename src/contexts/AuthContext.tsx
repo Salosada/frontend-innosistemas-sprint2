@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     deleteCookie('auth_token');
     deleteCookie('refresh_token');
     deleteCookie('user_info');
-  }, [user?.email]); // user.email es una dependencia para la llamada a la API de logout
+  }, [user?.email]);
 
   useEffect(() => {
     const storedToken = getCookie('auth_token');
@@ -56,12 +56,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout();
       }
     }
-    // Si no hay storedToken, o si el parseo falló, asegurar que el estado de usuario sea null
     else {
-      logout(); // Limpiar el estado de autenticación si no hay token o el parseo falló
+      setUser(null);
+      setToken(null);
     }
     setIsLoading(false);
-  }, [logout]);
+  }, []); // Se ejecuta solo una vez al montar el componente
 
   const login = async (credentials: LoginRequest): Promise<void> => {
     try {
