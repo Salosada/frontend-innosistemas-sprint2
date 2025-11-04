@@ -25,6 +25,9 @@ export class ApiClient {
       }
     } catch {}
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.TIMEOUT);
+
     // Construir las cabeceras de forma segura
     const finalHeaders = new Headers(options.headers);
     Object.entries({ ...API_CONFIG.HEADERS, ...authHeaders }).forEach(([key, value]) => {
@@ -32,6 +35,7 @@ export class ApiClient {
     });
     const config: RequestInit = {
       headers: finalHeaders,
+      signal: controller.signal, // Adjuntar la señal del AbortController
       ...options,
     };
 
@@ -110,12 +114,20 @@ export class ApiClient {
       console.error(`API request failed for ${endpoint}:`, error);
       
       // Si es un error de red
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new Error('La solicitud ha excedido el tiempo de espera. Verifique su conexión o intente más tarde.');
+      }
+      
+      // Si es un error de red general (ej. DNS, offline)
       if (error instanceof TypeError && error.message.includes('fetch')) {
         throw new Error('Error de conexión. Verifique su conexión a internet.');
       }
       
       // Re-lanzar el error original si ya tiene un mensaje personalizado
       throw error;
+    }
+    finally {
+      clearTimeout(timeoutId); // Limpiar el timeout en cualquier caso
     }
   }
 
