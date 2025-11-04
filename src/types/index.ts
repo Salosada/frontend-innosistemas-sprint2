@@ -1,4 +1,4 @@
-﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
+﻿﻿﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
 
 // Tipos de autenticación
 export interface LoginRequest {
@@ -234,5 +234,6 @@ export interface Team {
   creatorId: string;
   projectId: string;
   members: Student[];
+  status?: 'forming' | 'active' | 'completed' | 'incomplete';
   createdAt: Date;
 }

@@ -70,6 +70,7 @@ export default function EquiposPage() {
         creatorId: 'current-user-id', // Reemplazar con el ID del usuario logueado
         projectId: 'new-project-id',
         members: [],
+        status: 'forming', // Estado inicial al crear
         createdAt: new Date()
       };
       setTeams([...teams, newTeam]);
