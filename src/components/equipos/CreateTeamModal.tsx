@@ -19,11 +19,15 @@ const MOCK_STUDENTS: Student[] = [
     id: 'student2',
     name: 'María García',
     email: 'maria.garcia@udea.edu.co',
+    courseIds: ['1', '2'], // Datos mock completos
+    currentTeams: {}, // Datos mock completos
   },
   {
     id: 'student3',
     name: 'Carlos López',
     email: 'carlos.lopez@udea.edu.co',
+    courseIds: ['1', '3'], // Datos mock completos
+    currentTeams: {}, // Datos mock completos
   }
 ];
 

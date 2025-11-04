@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import NavBar from '@/components/layout/NavBar';
-import CreateTeamModal from '@/components/equipos/CreateTeamModal';
+import CreateTeamModal from '@/components/equipos/CreateTeamModal'; // Mantener este import
 import TeamActionsModal from '@/components/equipos/TeamActionsModal';
-import { SOFTWARE_ENGINEERING_COURSES, Team, Student, Notification } from '@/types';
+import { SOFTWARE_ENGINEERING_COURSES, Team, Student, Notification, LoggedInStudent } from '@/types';
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -68,7 +68,7 @@ export default function StudentDashboard() {
 
   // Filtrar cursos en los que el estudiante está inscrito
   const myCourses = SOFTWARE_ENGINEERING_COURSES.filter(course => 
-    user && (user as Student).courseIds?.includes(course.idCourse.toString())
+    user && user.role === 'student' && (user as LoggedInStudent).courseIds?.includes(course.idCourse.toString())
   );
 
   // Obtener estadísticas
@@ -91,7 +91,7 @@ export default function StudentDashboard() {
     setMyTeams(prev => [...prev, team]);
 
     // Crear notificaciones para los miembros invitados
-    const newNotifications = newTeam.members
+    const newNotifications = newTeam.members // newTeam.members son de tipo Student, que tiene id.
       .filter(member => member.id !== user?.id)
       .map(member => ({
         id: `notif_${Date.now()}_${member.id}`,
@@ -127,7 +127,7 @@ export default function StudentDashboard() {
     }));
 
     // Crear notificaciones para los miembros restantes
-    const team = myTeams.find(t => t.id === teamId);
+    const team = myTeams.find(t => t.id === teamId); // team.members son de tipo Student, que tiene id.
     if (team) {
       const remainingMembers = team.members.filter(member => member.id !== memberId);
       const newNotifications = remainingMembers.map(member => ({
@@ -150,7 +150,7 @@ export default function StudentDashboard() {
     const team = myTeams.find(t => t.id === teamId);
     if (team) {
       // Crear notificaciones para todos los miembros
-      const newNotifications = team.members
+      const newNotifications = team.members // team.members son de tipo Student, que tiene id.
         .filter(member => member.id !== user?.id)
         .map(member => ({
           id: `notif_${Date.now()}_${member.id}`,
