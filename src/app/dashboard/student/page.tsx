@@ -20,32 +20,20 @@ export default function StudentDashboard() {
     {
       id: 'team1',
       name: 'Equipo Alpha',
-      courseId: 'is1',
+      courseId: '1', // Corregido para usar ID numérico como string
       creatorId: 'student1',
       members: [
         {
           id: 'student1',
           name: 'Juan Pérez',
           email: 'juan.perez@udea.edu.co',
-          role: 'student',
-          courseIds: ['is1'],
-          skills: ['React', 'Node.js', 'MongoDB'],
-          currentTeams: { is1: 'team1' },
-          avatar: undefined,
-          createdAt: new Date('2024-01-15'),
-          updatedAt: new Date('2024-01-15')
+          courseIds: ['1']
         },
         {
           id: 'student2',
           name: 'María García',
           email: 'maria.garcia@udea.edu.co',
-          role: 'student',
-          courseIds: ['is1'],
-          skills: ['Python', 'Django', 'PostgreSQL'],
-          currentTeams: { is1: 'team1' },
-          avatar: undefined,
-          createdAt: new Date('2024-01-16'),
-          updatedAt: new Date('2024-01-16')
+          courseIds: ['1']
         }
       ],
       status: 'active',
@@ -64,7 +52,7 @@ export default function StudentDashboard() {
       read: false,
       createdAt: new Date('2024-01-20T10:30:00'),
       teamId: 'team1',
-      courseId: 'is1'
+      courseId: '1'
     },
     {
       id: '2',
@@ -75,7 +63,7 @@ export default function StudentDashboard() {
       read: false,
       createdAt: new Date('2024-01-20T09:00:00'),
       teamId: 'team1',
-      courseId: 'is1'
+      courseId: '1'
     }
   ]);
 
@@ -99,7 +87,6 @@ export default function StudentDashboard() {
       ...newTeam,
       id: `team_${Date.now()}`,
       createdAt: new Date(),
-      updatedAt: new Date()
     };
 
     setMyTeams(prev => [...prev, team]);

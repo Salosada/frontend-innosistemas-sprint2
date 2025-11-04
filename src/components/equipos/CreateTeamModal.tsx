@@ -91,7 +91,7 @@ export default function CreateTeamModal({
         return prev.filter(m => m.id !== student.id);
       } else {
         // Agregar al equipo si no se supera el máximo
-        if (prev.length + 1 >= maxTeamSize) { // +1 por el creador
+        if (prev.length + 1 >= maxTeamSize) {
           return prev; // No agregar si ya se alcanzó el máximo
         }
         return [...prev, student];
@@ -107,7 +107,8 @@ export default function CreateTeamModal({
     setIsCreating(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Simular llamada a la API
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       const currentUser: Student = {
         id: user.id, name: user.name, email: user.email
@@ -119,6 +120,7 @@ export default function CreateTeamModal({
         courseId,
         creatorId: currentUser.id,
         members: allMembers,
+        projectId: 'temp-proj-id', // projectId es requerido por el tipo Team
         status: 'forming',
       };
 
