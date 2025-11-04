@@ -82,16 +82,18 @@ export default function RegisterForm() {
       // Limpiar el formulario
       setFormData({ nameUser: '', email: '', password: '', confirmPassword: '', roleId: 2 });
       
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error en el registro:', error);
-      // Si el backend devuelve 409 para usuario existente
-      const message =
-        (String((error as any)?.message).includes('409') || /exist/i.test(String(error)))
-        ? 'El usuario ya existe'
-        : (error as any)?.code === 'INVALID_EMAIL'
-        ? 'Email no válido'
-        : 'Error al crear la cuenta. Inténtalo de nuevo.';
-      setErrors({ general: message });
+      let errorMessage = 'Error al crear la cuenta. Inténtalo de nuevo.';
+
+      if (error instanceof Error) {
+        if (error.message.includes('409') || /exist/i.test(error.message)) {
+          errorMessage = 'El usuario ya existe';
+        } else if ((error as { code?: string }).code === 'INVALID_EMAIL') {
+          errorMessage = 'Email no válido';
+        }
+      }
+      setErrors({ general: errorMessage });
     } finally {
       setIsLoading(false);
     }

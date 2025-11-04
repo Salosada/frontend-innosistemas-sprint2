@@ -9,7 +9,8 @@ export default function RegisterForm() {
     nameUser: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    roleId: 2 // Por defecto, rol de estudiante
   });
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [success, setSuccess] = useState<string>('');
@@ -41,14 +42,19 @@ export default function RegisterForm() {
 
     if (!formData.email) {
       newErrors.email = 'El correo electrónico es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email) || !formData.email.endsWith('@udea.edu.co')) {
       newErrors.email = 'Email no válido';
+    } else if (!formData.email.endsWith('@udea.edu.co')) {
+      newErrors.email = 'Solo se permiten correos institucionales (@udea.edu.co)';
     }
 
     if (!formData.password) {
       newErrors.password = 'La contraseña es requerida';
     } else if (formData.password.length < 6) {
       newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(formData.password)) {
+      newErrors.password =
+        'La contraseña debe contener al menos una mayúscula, una minúscula y un número.';
     }
 
     if (!formData.confirmPassword) {
@@ -75,28 +81,34 @@ export default function RegisterForm() {
       await AuthService.register({
         nameUser: formData.nameUser.trim(),
         email: formData.email.trim(),
-        password: formData.password
+        password: formData.password,
+        roleId: formData.roleId
       });
 
       setSuccess('Registro exitoso. Ya puedes iniciar sesión.');
       // Limpiar el formulario
-      setFormData({ nameUser: '', email: '', password: '', confirmPassword: '' });
+      setFormData({ nameUser: '', email: '', password: '', confirmPassword: '', roleId: 2 });
       
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error en el registro:', error);
       
       let errorMessage = 'Error en el registro. Intente nuevamente.';
       
       if (error instanceof Error) {
-        const message = error.message.toLowerCase();
-        if (message.includes('409') || message.includes('exist')) {
-          errorMessage = 'El usuario ya existe. Pruebe con otro email.';
-        } else if (message.includes('400')) {
-          errorMessage = 'Datos inválidos. Verifique la información.';
-        } else if (message.includes('500')) {
-          errorMessage = 'Error del servidor. Intente más tarde.';
-        } else if (error.message && error.message.length < 100) {
-          errorMessage = error.message;
+        // Asumimos que el error de ApiClient puede tener una propiedad 'response' con el status
+        const apiError = error as any;
+        if (apiError.response?.status) {
+          switch (apiError.response.status) {
+            case 409:
+              errorMessage = 'El usuario ya existe. Pruebe con otro email.';
+              break;
+            case 400:
+              errorMessage = 'Datos inválidos. Verifique la información.';
+              break;
+            case 500:
+              errorMessage = 'Error del servidor. Intente más tarde.';
+              break;
+          }
         }
       }
       

@@ -4,7 +4,8 @@ import type {
   LoginRequest, 
   CreateUserDto,
   RefreshTokenRequest,
-  LogoutRequest
+  LogoutRequest,
+  UserWithRoleDto
 } from '@/types';
 
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
     return ApiClient.post<TokenResponse>('/auth/refresh', refreshPayload);
   }
 
-  static async getUserInfo(): Promise<any> {
-    return ApiClient.get<any>('/auth/me');
+  static async getUserInfo(): Promise<UserWithRoleDto> {
+    return ApiClient.get<UserWithRoleDto>('/auth/me');
   }
 }
