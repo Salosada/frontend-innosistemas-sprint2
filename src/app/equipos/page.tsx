@@ -15,6 +15,7 @@ const mapTeamResponseToTeam = (teamResponse: TeamShowDto): Team => ({
   courseId: teamResponse.courseId.toString(),
   creatorId: teamResponse.students[0]?.email || '',
   projectId: teamResponse.projectId.toString(), // Incluir projectId para edición
+  status: 'active', // Asignar un estado por defecto, ya que el backend no lo provee
   createdAt: new Date(), // Fecha por defecto (el backend no proporciona esta información)
   members: teamResponse.students.map((student, idx) => ({
     id: idx.toString(),

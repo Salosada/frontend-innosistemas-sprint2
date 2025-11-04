@@ -49,7 +49,6 @@ export default function StudentDashboard() {
         }
       ],
       status: 'active',
-      isConfirmed: false,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-20')
     }
@@ -95,7 +94,7 @@ export default function StudentDashboard() {
     unreadNotifications: notifications.filter(n => !n.read).length
   };
 
-  const handleCreateTeam = (newTeam: Omit<Team, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreateTeam = (newTeam: Omit<Team, 'id' | 'createdAt'>) => {
     const team: Team = {
       ...newTeam,
       id: `team_${Date.now()}`,
@@ -425,7 +424,7 @@ export default function StudentDashboard() {
               </div>
               <div className="p-6 space-y-3">
                 {myCourses.map((course) => {
-                  const hasTeamInCourse = myTeams.some(team => team.courseId === course.id);
+                  const hasTeamInCourse = myTeams.some(team => team.courseId === course.idCourse.toString());
                   
                   return (
                     <button
@@ -440,7 +439,7 @@ export default function StudentDashboard() {
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-bold text-black">{course.name}</h3>
+                          <h3 className="font-bold text-black">{course.nameCourse}</h3>
                           <p className={`text-sm ${hasTeamInCourse ? 'text-gray-600' : 'text-blue-700 font-semibold'}`}> 
                             {hasTeamInCourse ? 'Ya tienes un equipo' : 'Crear equipo'}
                           </p>
