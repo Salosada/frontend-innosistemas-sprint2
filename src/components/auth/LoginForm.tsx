@@ -56,9 +56,18 @@ export default function LoginForm() {
     }
 
     try {
-      const { role } = await login(formData);
-      // Redirección directa basada en el rol obtenido
-      router.push('/dashboard');
+      const userInfo = await login(formData);
+      // Redirección directa al dashboard específico del rol
+      switch (userInfo.role) {
+        case 'admin':
+          router.push('/dashboard/admin');
+          break;
+        case 'student':
+          router.push('/dashboard/student');
+          break;
+        default:
+          router.push('/dashboard');
+      }
       
     } catch (error) {
       console.error('Error en el login:', error);

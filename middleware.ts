@@ -18,7 +18,7 @@ const ROLE_GUARDS: Array<{ prefix: string; role: string }> = [
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('auth_token')?.value;
-  const role = req.cookies.get('auth_role')?.value as 'admin' | 'student' | 'professor' | undefined;
+  const role = req.cookies.get('auth_role')?.value as string | undefined;
   const isAdmin = role === 'admin' || role === 'Administrador';
   const isStudent = role === 'student' || role === 'Estudiante';
 

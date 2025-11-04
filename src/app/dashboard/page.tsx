@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import NavBar from '../../components/layout/NavBar';
@@ -8,33 +8,17 @@ import NavBar from '../../components/layout/NavBar';
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        router.push('/auth/login');
-        return;
-      }
-
-      // Redirigir según el rol del usuario
-      switch (user.role) {
-        case 'student':
-          router.push('/dashboard/student');
-          break;
-        case 'admin':
-          router.push('/dashboard/admin');
-          break;
-        case 'professor':
-          router.push('/dashboard/professor');
-          break;
-        default:
-          // Mantener el dashboard genérico como fallback
-          break;
-      }
+    setIsClient(true);
+    if (!isLoading && !user) {
+      router.push('/auth/login');
     }
-  }, [user, isLoading, router]);
+  }, [isLoading, user, router]);
 
-  if (isLoading) {
+  // Evitar renderizado en servidor que no coincide con el cliente
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavBar />
@@ -48,7 +32,7 @@ export default function DashboardPage() {
     );
   }
 
-  if (!user) {
+  if (!user && isClient) {
     return (
       <div className="min-h-screen bg-gray-50">
         <NavBar />
@@ -62,7 +46,7 @@ export default function DashboardPage() {
     );
   }
 
-  // Dashboard genérico (fallback)
+  // Dashboard genérico (fallback si el usuario ya está logueado y navega aquí directamente)
   return (
     <div className="min-h-screen bg-gray-50">
       <NavBar />
@@ -81,21 +65,21 @@ export default function DashboardPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Bienvenido, {user.name}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Tu dashboard específico se está cargando...
-          </p>
-          <div className="space-y-4">
-            <p className="text-sm text-gray-500">
-              Rol: {user.role === 'admin' ? 'Administrador' : 
-                    user.role === 'professor' ? 'Profesor' : 'Estudiante'}
-            </p>
-            <p className="text-sm text-gray-500">
-              Email: {user.email}
-            </p>
-          </div>
+          {user && (
+            <>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Bienvenido, {user.name}
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Usa la barra de navegación para ir a tu sección.
+              </p>
+              <div className="space-y-4">
+                <p className="text-sm text-gray-500">
+                  Rol: {user.role === 'admin' ? 'Administrador' : user.role === 'professor' ? 'Profesor' : 'Estudiante'}
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

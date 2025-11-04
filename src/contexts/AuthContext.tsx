@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []); // Se ejecuta solo una vez al montar el componente
 
-  const login = async (credentials: LoginRequest): Promise<void> => {
+  const login = async (credentials: LoginRequest): Promise<UserInfo> => {
     try {
       setIsLoading(true);
       const response: TokenResponse = await AuthService.login(credentials);
@@ -101,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('Final user info:', fullUserInfo);
         setUser(fullUserInfo);
         setCookie('user_info', JSON.stringify(fullUserInfo), response.expiresIn);
+        return fullUserInfo;
       } catch (userInfoError) {
         console.error('Error getting user info:', userInfoError);
         
@@ -115,6 +116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         setUser(basicUserInfo);
         setCookie('user_info', JSON.stringify(basicUserInfo), response.expiresIn);
+        return basicUserInfo;
       }
     } catch (error) {
       console.error('Error during login:', error);
