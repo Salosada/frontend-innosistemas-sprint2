@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NavBar from '@/components/layout/NavBar';
 import { SOFTWARE_ENGINEERING_COURSES } from '@/types';
 
