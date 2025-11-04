@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Student, Team, TeamValidation, TeamValidationError } from '@/types';
+import { Student, Team } from '@/types';
 
 interface CreateTeamModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateTeam: (team: Omit<Team, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onCreateTeam: (team: Omit<Team, 'id' | 'createdAt'>) => void;
   courseId: string;
   maxTeamSize: number;
   minTeamSize: number;
@@ -19,61 +19,11 @@ const MOCK_STUDENTS: Student[] = [
     id: 'student2',
     name: 'María García',
     email: 'maria.garcia@udea.edu.co',
-    role: 'student',
-    courseIds: ['is1', 'is2'],
-    skills: ['Python', 'Django', 'React'],
-    currentTeams: {},
-    avatar: undefined,
-    createdAt: new Date('2024-01-16'),
-    updatedAt: new Date('2024-01-16')
   },
   {
     id: 'student3',
     name: 'Carlos López',
     email: 'carlos.lopez@udea.edu.co',
-    role: 'student',
-    courseIds: ['is1', 'is3'],
-    skills: ['Java', 'Spring', 'MySQL'],
-    currentTeams: {},
-    avatar: undefined,
-    createdAt: new Date('2024-01-17'),
-    updatedAt: new Date('2024-01-17')
-  },
-  {
-    id: 'student4',
-    name: 'Ana Rodríguez',
-    email: 'ana.rodriguez@udea.edu.co',
-    role: 'student',
-    courseIds: ['is1', 'is4'],
-    skills: ['Vue.js', 'PHP', 'PostgreSQL'],
-    currentTeams: {},
-    avatar: undefined,
-    createdAt: new Date('2024-01-18'),
-    updatedAt: new Date('2024-01-18')
-  },
-  {
-    id: 'student5',
-    name: 'Luis Martínez',
-    email: 'luis.martinez@udea.edu.co',
-    role: 'student',
-    courseIds: ['is1', 'is5'],
-    skills: ['Angular', 'C#', '.NET'],
-    currentTeams: {},
-    avatar: undefined,
-    createdAt: new Date('2024-01-19'),
-    updatedAt: new Date('2024-01-19')
-  },
-  {
-    id: 'student6',
-    name: 'Elena Ruiz',
-    email: 'elena.ruiz@udea.edu.co',
-    role: 'student',
-    courseIds: ['is1', 'is6'],
-    skills: ['React', 'GraphQL', 'MongoDB'],
-    currentTeams: { is1: 'team3' }, // Ya está en un equipo
-    avatar: undefined,
-    createdAt: new Date('2024-01-20'),
-    updatedAt: new Date('2024-01-20')
   }
 ];
 
@@ -90,76 +40,47 @@ export default function CreateTeamModal({
   const [selectedMembers, setSelectedMembers] = useState<Student[]>([]);
   const [availableStudents, setAvailableStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [validation, setValidation] = useState<TeamValidation>({ isValid: true, errors: [], warnings: [] });
+  const [errors, setErrors] = useState<string[]>([]);
   const [isCreating, setIsCreating] = useState(false);
 
   // Filtrar estudiantes disponibles para el curso
   useEffect(() => {
     if (isOpen) {
       const students = MOCK_STUDENTS.filter(student => 
-        student.courseIds.includes(courseId) && 
+        student.courseIds?.includes(courseId) && 
         student.id !== user?.id && // Excluir al usuario actual
-        !student.currentTeams[courseId] // Excluir estudiantes ya en equipos
+        !student.currentTeams?.[courseId] // Excluir estudiantes ya en equipos
       );
       setAvailableStudents(students);
     }
   }, [isOpen, courseId, user?.id]);
 
   const validateTeam = () => {
-    const errors: TeamValidationError[] = [];
+    const newErrors: string[] = [];
     
-    // Validar nombre del equipo
     if (!teamName.trim()) {
-      errors.push({
-        type: 'min_members',
-        message: 'El nombre del equipo es requerido'
-      });
+      newErrors.push('El nombre del equipo es requerido');
     }
 
-    // Validar tamaño mínimo (incluyendo al creador)
     const totalMembers = selectedMembers.length + 1; // +1 por el creador
     if (totalMembers < minTeamSize) {
-      errors.push({
-        type: 'min_members',
-        message: `El equipo debe tener mínimo ${minTeamSize} integrantes. Actualmente: ${totalMembers}`
-      });
+      newErrors.push(`El equipo debe tener mínimo ${minSize} integrantes. Actualmente: ${totalMembers}`);
     }
 
-    // Validar tamaño máximo
     if (totalMembers > maxTeamSize) {
-      errors.push({
-        type: 'max_members',
-        message: `El equipo no puede tener más de ${maxTeamSize} integrantes. Actualmente: ${totalMembers}`
-      });
+      newErrors.push(`El equipo no puede tener más de ${maxSize} integrantes. Actualmente: ${totalMembers}`);
     }
 
-    // Verificar duplicados (aunque no debería pasar por el filtro)
-    selectedMembers.forEach(member => {
-      if (member.currentTeams[courseId]) {
-        errors.push({
-          type: 'already_in_team',
-          message: `${member.name} ya pertenece a otro equipo en este curso`,
-          studentId: member.id
-        });
-      }
-    });
-
-    setValidation({
-      isValid: errors.length === 0,
-      errors,
-      warnings: []
-    });
-    setValidation({
-      isValid: errors.length === 0,
-      errors,
-      warnings: []
-    });
+    setErrors(newErrors);
+    return newErrors.length === 0;
   };
 
   // Validar el equipo cuando cambie la selección
   useEffect(() => {
-    validateTeam();
-  }, [selectedMembers, teamName, validateTeam]);
+    if (isOpen) {
+      validateTeam();
+    }
+  }, [selectedMembers, teamName, isOpen]);
 
   const handleToggleMember = (student: Student) => {
     setSelectedMembers(prev => {
@@ -179,26 +100,26 @@ export default function CreateTeamModal({
   };
 
   const handleCreateTeam = async () => {
-    if (!validation.isValid || !user) {
+    if (!validateTeam() || !user) {
       return;
     }
 
     setIsCreating(true);
 
     try {
-      // Simular creación del equipo
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const currentUser = user as Student;
+      const currentUser: Student = {
+        id: user.id, name: user.name, email: user.email
+      };
       const allMembers = [currentUser, ...selectedMembers];
 
-      const newTeam: Omit<Team, 'id' | 'createdAt' | 'updatedAt'> = {
+      const newTeam: Omit<Team, 'id' | 'createdAt'> = {
         name: teamName.trim(),
         courseId,
         creatorId: currentUser.id,
         members: allMembers,
         status: 'forming',
-        isConfirmed: false
       };
 
       onCreateTeam(newTeam);
@@ -219,7 +140,7 @@ export default function CreateTeamModal({
   const filteredStudents = availableStudents.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
+    student.skills?.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (!isOpen) return null;
@@ -290,7 +211,7 @@ export default function CreateTeamModal({
                 <p className="text-sm font-medium text-gray-900">{member.name}</p>
                 <p className="text-xs text-gray-500">{member.email}</p>
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {member.skills.slice(0, 3).map((skill, index) => (
+                  {member.skills?.slice(0, 3).map((skill, index) => (
                     <span 
                       key={index}
                       className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
@@ -298,7 +219,7 @@ export default function CreateTeamModal({
                       {skill}
                     </span>
                   ))}
-                  {member.skills.length > 3 && (
+                  {member.skills && member.skills.length > 3 && (
                     <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                       +{member.skills.length - 3}
                     </span>
@@ -355,7 +276,7 @@ export default function CreateTeamModal({
                     <p className="text-sm font-medium text-gray-900">{student.name}</p>
                     <p className="text-xs text-gray-500">{student.email}</p>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {student.skills.slice(0, 3).map((skill, index) => (
+                      {student.skills?.slice(0, 3).map((skill, index) => (
                         <span 
                           key={index}
                           className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
@@ -363,7 +284,7 @@ export default function CreateTeamModal({
                           {skill}
                         </span>
                       ))}
-                      {student.skills.length > 3 && (
+                      {student.skills && student.skills.length > 3 && (
                         <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                           +{student.skills.length - 3}
                         </span>
@@ -393,7 +314,7 @@ export default function CreateTeamModal({
         </div>
 
         {/* Errores de validación */}
-        {validation.errors.length > 0 && (
+        {errors.length > 0 && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
             <div className="flex">
               <svg className="w-5 h-5 text-red-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -404,8 +325,8 @@ export default function CreateTeamModal({
                   Errores de validación:
                 </h3>
                 <ul className="mt-1 text-sm text-red-700 list-disc list-inside">
-                  {validation.errors.map((error, index) => (
-                    <li key={index}>{error.message}</li>
+                  {errors.map((error, index) => (
+                    <li key={index}>{error}</li>
                   ))}
                 </ul>
               </div>
@@ -424,7 +345,7 @@ export default function CreateTeamModal({
           </button>
           <button
             onClick={handleCreateTeam}
-            disabled={!validation.isValid || isCreating}
+            disabled={errors.length > 0 || isCreating}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isCreating ? 'Creando...' : 'Crear Equipo'}

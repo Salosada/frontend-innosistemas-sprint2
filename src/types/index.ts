@@ -225,6 +225,10 @@ export interface Student {
   id: string;
   name: string;
   email: string;
+  skills?: string[];
+  role?: 'student' | 'admin';
+  courseIds?: string[];
+  currentTeams?: { [courseId: string]: string };
 }
 
 export interface Team {
@@ -236,4 +240,5 @@ export interface Team {
   members: Student[];
   status?: 'forming' | 'active' | 'completed' | 'incomplete';
   createdAt: Date;
+  updatedAt?: Date;
 }

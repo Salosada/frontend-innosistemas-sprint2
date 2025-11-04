@@ -1,25 +1,5 @@
 import React, { useState } from 'react';
-
-interface Student {
-  id: string;
-  name: string;
-  email: string;
-  skills: string[];
-}
-
-interface Team {
-  id: string;
-  name: string;
-  courseId?: string;
-  members: Student[];
-  projectId?: string;
-  project?: string;
-  progress?: number;
-  status: 'forming' | 'active' | 'completed';
-  createdAt: Date;
-  updatedAt?: Date;
-  frontend?: string;
-}
+import { Team, Student } from '@/types';
 
 interface EditTeamModalProps {
   team: Team;
@@ -38,7 +18,7 @@ const GLOBAL_PROJECTS: { id: string; name: string }[] = [
   { id: 'p4', name: 'Plataforma de Evaluación Online' },
   { id: 'p5', name: 'Dashboard Administrativo' }
 ];
-const AVAILABLE_STUDENTS: Student[] = [
+const AVAILABLE_STUDENTS: Student[] = [ // Esto debería venir de una API
   { id: '9', name: 'Sofia Hernández', email: 'sofia.hernandez@udea.edu.co', skills: ['React', 'CSS'] },
   { id: '10', name: 'Miguel Torres', email: 'miguel.torres@udea.edu.co', skills: ['Vue.js', 'JavaScript'] },
   { id: '11', name: 'Camila Vargas', email: 'camila.vargas@udea.edu.co', skills: ['Angular', 'TypeScript'] },
@@ -47,17 +27,6 @@ const AVAILABLE_STUDENTS: Student[] = [
   { id: '14', name: 'Sebastián Jiménez', email: 'sebastian.jimenez@udea.edu.co', skills: ['Java', 'Spring Boot'] },
   { id: '15', name: 'Isabella Ramírez', email: 'isabella.ramirez@udea.edu.co', skills: ['PHP', 'Laravel'] },
   { id: '16', name: 'Andrés Gutierrez', email: 'andres.gutierrez@udea.edu.co', skills: ['C#', '.NET'] }
-];
-
-const FRONTEND_OPTIONS = [
-  'React + TypeScript',
-  'Vue.js + Nuxt',
-  'Next.js + TypeScript',
-  'Angular',
-  'Svelte',
-  'React Native',
-  'Flutter',
-  'Por definir'
 ];
 
 export default function EditTeamModal({ 
@@ -171,9 +140,7 @@ export default function EditTeamModal({
               onChange={e => {
                 const selected = GLOBAL_PROJECTS.find(p => p.id === e.target.value);
                 setEditedTeam({
-                  ...editedTeam,
-                  projectId: selected?.id,
-                  project: selected?.name || ''
+                  ...editedTeam, projectId: selected?.id || ''
                 });
               }}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
