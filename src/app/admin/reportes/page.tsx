@@ -4,9 +4,19 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import NavBar from '@/components/layout/NavBar';
-import { Team, SOFTWARE_ENGINEERING_COURSES, TeamReport } from '@/types';
+import { Team, SOFTWARE_ENGINEERING_COURSES } from '@/types';
 
 // Mock data para reportes
+interface TeamReport {
+  teamId: string;
+  teamName: string;
+  courseName: string;
+  memberCount: number;
+  projectProgress: number;
+  lastActivity: Date;
+  status: 'active' | 'completed' | 'incomplete' | 'forming';
+}
+
 const MOCK_TEAM_REPORTS: TeamReport[] = [
   {
     teamId: '1',
