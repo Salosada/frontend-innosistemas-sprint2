@@ -242,3 +242,16 @@ export interface Team {
   createdAt: Date;
   updatedAt?: Date;
 }
+
+export interface Notification {
+  id: string;
+  userId: string;
+  type: 'team_assignment' | 'deadline_reminder' | 'team_invitation' | 'team_removal' | 'team_dissolved';
+  title: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+  teamId: string;
+  courseId: string;
+  actionRequired?: boolean;
+}

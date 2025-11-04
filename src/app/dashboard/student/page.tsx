@@ -82,7 +82,7 @@ export default function StudentDashboard() {
 
   // Filtrar cursos en los que el estudiante está inscrito
   const myCourses = SOFTWARE_ENGINEERING_COURSES.filter(course => 
-    user && (user as Student).courseIds?.includes(course.id)
+    user && (user as Student).courseIds?.includes(course.idCourse.toString())
   );
 
   // Obtener estadísticas
@@ -340,7 +340,7 @@ export default function StudentDashboard() {
               
               <div className="divide-y divide-gray-200">
                 {myTeams.map((team) => {
-                  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.id === team.courseId);
+                  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === team.courseId);
                   const isCreator = team.creatorId === user.id;
                   
                   return (
@@ -387,7 +387,7 @@ export default function StudentDashboard() {
                       </div>
                       
                       <p className="text-sm text-gray-600 mb-3">
-                        {course?.name} • {team.members.length} miembros
+                        {course?.nameCourse} • {team.members.length} miembros
                       </p>
                       
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
@@ -429,13 +429,13 @@ export default function StudentDashboard() {
                   
                   return (
                     <button
-                      key={course.id}
-                      onClick={() => openCreateTeamModal(course.id)}
+                      key={course.idCourse}
+                      onClick={() => openCreateTeamModal(course.idCourse.toString())}
                       disabled={hasTeamInCourse}
                       className={`w-full text-left p-3 rounded-lg border transition-colors font-semibold ${
                         hasTeamInCourse 
                           ? 'border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed'
-                          : 'border-gray-700 hover:border-blue-700 hover:bg-blue-100 text-black'
+                          : 'border-blue-600 hover:border-blue-700 hover:bg-blue-50 text-blue-800'
                       }`}
                     >
                       <div className="flex items-center justify-between">
@@ -510,8 +510,8 @@ export default function StudentDashboard() {
           }}
           onCreateTeam={handleCreateTeam}
           courseId={selectedCourse}
-          maxTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.id === selectedCourse)?.maxTeamSize || 3}
-          minTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.id === selectedCourse)?.minTeamSize || 2}
+          maxTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === selectedCourse)?.maxTeamSize || 3}
+          minTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === selectedCourse)?.minTeamSize || 2}
         />
       )}
 
@@ -525,7 +525,7 @@ export default function StudentDashboard() {
           team={selectedTeam}
           onLeaveTeam={handleLeaveTeam}
           onDissolveTeam={handleDissolveTeam}
-          minTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.id === selectedTeam.courseId)?.minTeamSize || 2}
+          minTeamSize={SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === selectedTeam.courseId)?.minTeamSize || 2}
         />
       )}
     </div>

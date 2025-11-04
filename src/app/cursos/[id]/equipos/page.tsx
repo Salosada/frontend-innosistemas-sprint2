@@ -6,6 +6,7 @@ import { useParams } from 'next/navigation';
 import NavBar from '../../../../components/layout/NavBar';
 import { SOFTWARE_ENGINEERING_COURSES, Team, Student } from '@/types';
 import EditTeamModal from '@/components/equipos/EditTeamModal';
+import CreateTeamModal from '@/components/equipos/CreateTeamModal';
 
 export default function EquiposPage() {
   const params = useParams();
@@ -17,7 +18,6 @@ export default function EquiposPage() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
-  const [newTeamName, setNewTeamName] = useState('');
   
   // Datos mock para equipos
   const [teams, setTeams] = useState<Team[]>([
@@ -61,22 +61,14 @@ export default function EquiposPage() {
     }
   ]);
 
-  const handleCreateTeam = () => {
-    if (newTeamName.trim()) {
-      const newTeam: Team = {
-        id: Date.now().toString(),
-        name: newTeamName.trim(),
-        courseId: courseId,
-        creatorId: 'current-user-id', // Reemplazar con el ID del usuario logueado
-        projectId: 'new-project-id',
-        members: [],
-        status: 'forming', // Estado inicial al crear
-        createdAt: new Date()
-      };
-      setTeams([...teams, newTeam]);
-      setNewTeamName('');
-      setShowCreateModal(false);
-    }
+  const handleCreateTeam = (newTeamData: Omit<Team, 'id' | 'createdAt'>) => {
+    const newTeam: Team = {
+      ...newTeamData,
+      id: Date.now().toString(),
+      createdAt: new Date(),
+    };
+    setTeams(prevTeams => [...prevTeams, newTeam]);
+    setShowCreateModal(false);
   };
 
   const handleEditTeam = (team: Team) => {
@@ -407,44 +399,14 @@ export default function EquiposPage() {
 
       {/* Modal de creación de equipo */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Crear Nuevo Equipo
-              </h3>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Nombre del Equipo
-                </label>
-                <input
-                  type="text"
-                  value={newTeamName}
-                  onChange={(e) => setNewTeamName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Ej: Equipo Alpha"
-                />
-              </div>
-              
-              <div className="flex justify-end space-x-3">
-                <button
-                  onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleCreateTeam}
-                  disabled={!newTeamName.trim()}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Crear Equipo
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CreateTeamModal
+          isOpen={showCreateModal}
+          onClose={() => setShowCreateModal(false)}
+          onCreateTeam={handleCreateTeam}
+          courseId={courseId}
+          maxTeamSize={course?.maxTeamSize || 3}
+          minTeamSize={course?.minTeamSize || 2}
+        />
       )}
     </div>
   );

@@ -64,11 +64,11 @@ export default function CreateTeamModal({
 
     const totalMembers = selectedMembers.length + 1; // +1 por el creador
     if (totalMembers < minTeamSize) {
-      newErrors.push(`El equipo debe tener mínimo ${minSize} integrantes. Actualmente: ${totalMembers}`);
+      newErrors.push(`El equipo debe tener mínimo ${minTeamSize} integrantes. Actualmente: ${totalMembers}`);
     }
 
     if (totalMembers > maxTeamSize) {
-      newErrors.push(`El equipo no puede tener más de ${maxSize} integrantes. Actualmente: ${totalMembers}`);
+      newErrors.push(`El equipo no puede tener más de ${maxTeamSize} integrantes. Actualmente: ${totalMembers}`);
     }
 
     setErrors(newErrors);
