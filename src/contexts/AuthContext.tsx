@@ -81,8 +81,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         };
         
         const fullUserInfo: UserInfo = {
+          id: userInfo.id, // Añadido el ID del usuario
           email: userInfo.email || credentials.email,
-          name: userInfo.name || credentials.email.split('@')[0],
+          name: userInfo.nameUser || credentials.email.split('@')[0], // Corregido a nameUser
           role: mapRole(userInfo.role) || 'user',
           permissions: userInfo.permissions || []
         };
@@ -95,6 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         // Fallback: información básica del usuario
         const basicUserInfo: UserInfo = {
+          id: 'fallback-user-id', // Añadido un ID de fallback
           email: credentials.email,
           name: credentials.email.split('@')[0],
           role: 'user',
