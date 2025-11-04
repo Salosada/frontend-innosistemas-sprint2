@@ -58,8 +58,8 @@ export default function LoginForm() {
     try {
       await login(formData);
       
-      // Redireccionar después del login exitoso
-      router.push('/dashboard');
+      // Forzar un refresco completo para asegurar que el middleware lea la cookie
+      window.location.href = '/dashboard';
       
     } catch (error) {
       console.error('Error en el login:', error);
