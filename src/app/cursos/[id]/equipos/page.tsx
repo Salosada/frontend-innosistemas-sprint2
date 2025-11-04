@@ -32,7 +32,8 @@ export default function EquiposPage() {
         { id: '2', name: 'María García', email: 'maria.garcia@udea.edu.co' },
         { id: '3', name: 'Carlos López', email: 'carlos.lopez@udea.edu.co' }
       ],
-      createdAt: new Date('2024-01-15')
+      createdAt: new Date('2024-01-15'),
+      status: 'active'
     },
     {
       id: '2',
@@ -44,7 +45,8 @@ export default function EquiposPage() {
         { id: '4', name: 'Ana Rodríguez', email: 'ana.rodriguez@udea.edu.co' },
         { id: '5', name: 'Luis Martínez', email: 'luis.martinez@udea.edu.co' }
       ],
-      createdAt: new Date('2024-01-20')
+      createdAt: new Date('2024-01-20'),
+      status: 'forming'
     },
     {
       id: '3',
@@ -57,7 +59,8 @@ export default function EquiposPage() {
         { id: '7', name: 'Jorge Pérez', email: 'jorge.perez@udea.edu.co' },
         { id: '8', name: 'Roberto Silva', email: 'roberto.silva@udea.edu.co' }
       ],
-      createdAt: new Date('2024-01-10')
+      createdAt: new Date('2024-01-10'),
+      status: 'completed'
     }
   ]);
 
