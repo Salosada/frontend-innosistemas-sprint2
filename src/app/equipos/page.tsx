@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import NavBar from '@/components/layout/NavBar';
-import { Team, Student, SOFTWARE_ENGINEERING_COURSES, TeamShowDto, ProjectDto, UserDto, CreateTeamForm } from '@/types';
+import { Team, SOFTWARE_ENGINEERING_COURSES, TeamShowDto, ProjectDto, UserDto, CreateTeamForm } from '@/types';
 import { TeamsService } from '@/services/teams';
 import { ProjectsService } from '@/services/projects';
 import { UsersService } from '@/services/users';
@@ -93,8 +93,8 @@ export default function EquiposPage() {
     setLoading(true);
     
     try {
-      const selectedProject = projects.find(p => p.id.toString() === formData.projectId);
-      const selectedUsersList = users.filter(user => formData.selectedUsers.includes(user.email));
+      // const selectedProject = projects.find(p => p.id.toString() === formData.projectId);
+      // const selectedUsersList = users.filter(user => formData.selectedUsers.includes(user.email));
       
       if (editingTeam) {
         // Actualizar equipo existente

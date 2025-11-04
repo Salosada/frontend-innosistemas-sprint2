@@ -2,9 +2,9 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import NavBar from '@/components/layout/NavBar';
-import { Team, SOFTWARE_ENGINEERING_COURSES } from '@/types';
+import { SOFTWARE_ENGINEERING_COURSES } from '@/types';
 
 // Mock data para reportes
 interface TeamReport {

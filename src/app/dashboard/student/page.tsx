@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import NavBar from '@/components/layout/NavBar';
 import CreateTeamModal from '@/components/equipos/CreateTeamModal'; // Mantener este import
 import TeamActionsModal from '@/components/equipos/TeamActionsModal';
-import { SOFTWARE_ENGINEERING_COURSES, Team, Student, Notification, LoggedInStudent } from '@/types';
+import { SOFTWARE_ENGINEERING_COURSES, Team, Notification, LoggedInStudent } from '@/types';
 
 export default function StudentDashboard() {
   const { user } = useAuth();
@@ -41,7 +41,7 @@ export default function StudentDashboard() {
     }
   ]);
 
-  const [notifications, setNotifications] = useState<Notification[]>([
+  const [notifications] = useState<Notification[]>([
     {
       id: '1',
       userId: 'student1',

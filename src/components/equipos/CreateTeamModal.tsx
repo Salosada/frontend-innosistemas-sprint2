@@ -84,7 +84,7 @@ export default function CreateTeamModal({
     if (isOpen) {
       validateTeam();
     }
-  }, [selectedMembers, teamName, isOpen]);
+  }, [selectedMembers, teamName, isOpen, validateTeam]);
 
   const handleToggleMember = (student: Student) => {
     setSelectedMembers(prev => {
