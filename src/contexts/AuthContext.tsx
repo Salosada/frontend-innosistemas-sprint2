@@ -142,6 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       // Mantener la información de usuario existente o crear una básica
       const currentUser = user || {
+        id: 'unknown-user-id', // Añadir un ID de fallback
         email: 'unknown@example.com',
         name: 'User',
         role: 'user',
