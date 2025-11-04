@@ -147,7 +147,7 @@ export default function NavBar() {
                       <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
                         isAdmin
                           ? 'bg-red-100 text-red-800' 
-                          : isProfessor
+                          : isProfessor || user?.role === 'Profesor'
                           ? 'bg-purple-100 text-purple-800'
                           : 'bg-blue-100 text-blue-800'
                       }`}>
@@ -180,7 +180,7 @@ export default function NavBar() {
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           isAdmin
                             ? 'bg-red-100 text-red-800' 
-                            : isProfessor
+                            : isProfessor || user?.role === 'Profesor'
                             ? 'bg-purple-100 text-purple-800'
                             : 'bg-blue-100 text-blue-800'
                         }`}>

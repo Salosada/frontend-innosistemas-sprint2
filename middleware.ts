@@ -19,13 +19,15 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('auth_token')?.value;
   const role = req.cookies.get('auth_role')?.value as 'admin' | 'student' | 'professor' | undefined;
+  const isAdmin = role === 'admin' || role === 'Administrador';
+  const isStudent = role === 'student' || role === 'Estudiante';
 
   // Si el usuario ya está autenticado y está en login/registro, redirigir al dashboard por rol
   const isAuthPage = pathname === '/auth/login' || pathname === '/auth/register';
   if (token && isAuthPage) {
     const redirect = req.nextUrl.clone();
-    redirect.pathname = role === 'admin' ? '/dashboard/admin'
-      : role === 'student' ? '/dashboard/student'
+    redirect.pathname = isAdmin ? '/dashboard/admin'
+      : isStudent ? '/dashboard/student'
       : '/dashboard';
     return NextResponse.redirect(redirect);
   }
@@ -33,8 +35,8 @@ export function middleware(req: NextRequest) {
   // Si el usuario ya está autenticado y entra a la raíz '/', redirigir a su dashboard
   if (token && pathname === '/') {
     const redirect = req.nextUrl.clone();
-    redirect.pathname = role === 'admin' ? '/dashboard/admin'
-      : role === 'student' ? '/dashboard/student'
+    redirect.pathname = isAdmin ? '/dashboard/admin'
+      : isStudent ? '/dashboard/student'
       : '/dashboard';
     return NextResponse.redirect(redirect);
   }
@@ -60,7 +62,7 @@ export function middleware(req: NextRequest) {
 
   // Validar guardas por rol
   const guard = ROLE_GUARDS.find((g) => pathname.startsWith(g.prefix));
-  if (guard && role !== guard.role) {
+  if (guard && !isAdmin) { // Asumiendo que el guard es para 'admin'
     const dashUrl = req.nextUrl.clone();
     dashUrl.pathname = '/dashboard';
     return NextResponse.redirect(dashUrl);

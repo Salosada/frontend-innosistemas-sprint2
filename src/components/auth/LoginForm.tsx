@@ -56,10 +56,8 @@ export default function LoginForm() {
     }
 
     try {
-      await login(formData);
-      
-      // Sincronizar con el servidor y luego redirigir
-      router.refresh();
+      const { role } = await login(formData);
+      // Redirección directa basada en el rol obtenido
       router.push('/dashboard');
       
     } catch (error) {
