@@ -6,11 +6,13 @@ import { AuthService } from '@/services/auth';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
-    nameUser: '',
+    name: '', // Corregido de nameUser a name
     email: '',
     password: '',
     confirmPassword: '',
-    roleId: 2 // Por defecto, rol de estudiante
+    roleId: 2, // Por defecto, rol de estudiante
+    roleInProject: '', // Añadido
+    courseIds: [] as string[] // Añadido
   });
   const [errors, setErrors] = useState<{[key: string]: string}>({});
   const [success, setSuccess] = useState<string>('');
@@ -34,8 +36,8 @@ export default function RegisterForm() {
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {};
 
-    if (!formData.nameUser.trim()) {
-      newErrors.nameUser = 'El nombre es obligatorio';
+    if (!formData.name.trim()) {
+      newErrors.name = 'El nombre es obligatorio';
     }
 
     if (!formData.email) {
@@ -72,7 +74,7 @@ export default function RegisterForm() {
 
     try {
       await AuthService.register({
-        nameUser: formData.nameUser.trim(),
+        nameUser: formData.name.trim(), // Corregido para enviar nameUser
         email: formData.email.trim(),
         password: formData.password,
         roleId: formData.roleId
@@ -80,7 +82,7 @@ export default function RegisterForm() {
 
       setSuccess('Registro exitoso');
       // Limpiar el formulario
-      setFormData({ nameUser: '', email: '', password: '', confirmPassword: '', roleId: 2 });
+      setFormData({ name: '', email: '', password: '', confirmPassword: '', roleId: 2, roleInProject: '', courseIds: [] });
       
     } catch (error: unknown) {
       console.error('Error en el registro:', error);
@@ -143,7 +145,7 @@ export default function RegisterForm() {
                   errors.name ? 'border-red-300' : 'border-gray-300'
                 } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Tu nombre"
-                value={formData.name}
+                value={formData.name} // Corregido
                 onChange={handleChange}
               />
               {errors.name && (
@@ -185,7 +187,7 @@ export default function RegisterForm() {
                   errors.roleInProject ? 'border-red-300' : 'border-gray-300'
                 } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                 placeholder="Ej: Desarrollador, QA, Líder"
-                value={formData.roleInProject}
+                value={formData.roleInProject} // Corregido
                 onChange={handleChange}
               />
               {errors.roleInProject && (
@@ -199,7 +201,7 @@ export default function RegisterForm() {
               </label>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {SOFTWARE_ENGINEERING_COURSES.map((course) => {
-                  const checked = formData.courseIds.includes(course.idCourse.toString());
+                  const checked = formData.courseIds.includes(course.idCourse.toString()); // Corregido
                   return (
                     <label key={course.idCourse} className="inline-flex items-center space-x-2 text-sm text-gray-700">
                       <input

@@ -340,8 +340,7 @@ export default function EquiposPage() {
                                 {member.name}
                               </p>
                               <p className="text-sm text-gray-500">
-                                {member.email}
-                              </div>
+                                {member.email}</p>
                             </div>
                           </div>
                         ))}
