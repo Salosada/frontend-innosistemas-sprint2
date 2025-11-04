@@ -76,16 +76,23 @@ export function middleware(req: NextRequest) {
   const guard = ROLE_GUARDS.find((g) => pathname.startsWith(g.prefix));
   if (guard) {
     // Si el guard es para admin y el usuario no es admin, redirigir
-    if (guard.role === 'admin' && !isAdmin) {
+    if (guard.role === 'admin' && !isAdmin) { // Si la ruta es de admin y el usuario NO es admin
       const dashUrl = req.nextUrl.clone();
       dashUrl.pathname = '/dashboard';
       return NextResponse.redirect(dashUrl);
     }
-    // Aquí podrías añadir lógica similar para otros roles si tuvieras guards específicos
-    // Por ejemplo: if (guard.role === 'professor' && !isProfessor) { ... }
-    const dashUrl = req.nextUrl.clone();
-    dashUrl.pathname = '/dashboard';
-    return NextResponse.redirect(dashUrl);
+    // Si la ruta es de estudiante y el usuario NO es estudiante
+    if (guard.role === 'student' && !isStudent) {
+      const dashUrl = req.nextUrl.clone();
+      dashUrl.pathname = '/dashboard';
+      return NextResponse.redirect(dashUrl);
+    }
+    // Si la ruta es de profesor y el usuario NO es profesor
+    if (guard.role === 'professor' && !isProfessor) {
+      const dashUrl = req.nextUrl.clone();
+      dashUrl.pathname = '/dashboard';
+      return NextResponse.redirect(dashUrl);
+    }
   }
 
   return NextResponse.next();
