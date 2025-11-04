@@ -95,20 +95,13 @@ export default function RegisterForm() {
       let errorMessage = 'Error en el registro. Intente nuevamente.';
       
       if (error instanceof Error) {
-        // Asumimos que el error de ApiClient puede tener una propiedad 'response' con el status
-        const apiError = error as any;
-        if (apiError.response?.status) {
-          switch (apiError.response.status) {
-            case 409:
-              errorMessage = 'El usuario ya existe. Pruebe con otro email.';
-              break;
-            case 400:
-              errorMessage = 'Datos inválidos. Verifique la información.';
-              break;
-            case 500:
-              errorMessage = 'Error del servidor. Intente más tarde.';
-              break;
-          }
+        const message = error.message.toLowerCase();
+        if (message.includes('409') || message.includes('exist')) {
+          errorMessage = 'El usuario ya existe. Pruebe con otro email.';
+        } else if (message.includes('400') || message.includes('datos inválidos')) {
+          errorMessage = 'Datos inválidos. Verifique la información.';
+        } else if (message.includes('500') || message.includes('servidor')) {
+          errorMessage = 'Error del servidor. Intente más tarde.';
         }
       }
       
