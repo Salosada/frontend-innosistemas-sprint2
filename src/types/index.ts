@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
 
 // Tipos de autenticación
 export interface LoginRequest {
@@ -124,7 +124,7 @@ export interface CreateProjectForm {
 export interface AuthContextType {
   user: UserInfo | null;
   token: string | null;
-  login: (credentials: LoginRequest) => Promise<void>;
+  login: (credentials: LoginRequest) => Promise<UserInfo>;
   logout: () => void;
   refreshToken: () => Promise<void>;
   isAuthenticated: boolean;
