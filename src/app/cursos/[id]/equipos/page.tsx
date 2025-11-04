@@ -27,7 +27,7 @@ export default function EquiposPage() {
   const params = useParams();
   const courseId = params.id as string;
   
-  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.id === courseId);
+  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === courseId);
 
   // Estado para modal de creación y edición
   const [showCreateModal, setShowCreateModal] = useState(false);

@@ -49,6 +49,7 @@ export interface CreateUserDto {
   email: string;
   nameUser: string;
   password: string;
+  roleId?: number; // Añadido para que coincida con el payload de registro
 }
 
 export interface CourseDto {
