@@ -9,7 +9,7 @@ export default function CursoDetallePage() {
   const params = useParams();
   const courseId = params.id as string;
   
-  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.id === courseId);
+  const course = SOFTWARE_ENGINEERING_COURSES.find(c => c.idCourse.toString() === courseId);
 
   // Datos mock para equipos y proyectos
   const [teams] = useState([
@@ -66,7 +66,7 @@ export default function CursoDetallePage() {
                     <svg className="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-gray-500 ml-1 md:ml-2">{course.name}</span>
+                    <span className="text-gray-500 ml-1 md:ml-2">{course.nameCourse}</span>
                   </div>
                 </li>
               </ol>
@@ -74,10 +74,10 @@ export default function CursoDetallePage() {
             
             <div className="mt-4">
               <h1 className="text-3xl font-bold text-gray-900">
-                {course.name}
+                {course.nameCourse}
               </h1>
               <p className="mt-2 text-lg text-gray-600">
-                Semestre {course.semester} - Prof. {course.professor}
+                Semestre {course.semester} - Prof. {course.professor || 'No asignado'}
               </p>
             </div>
           </div>
@@ -113,8 +113,7 @@ export default function CursoDetallePage() {
                 
                 <div>
                   <h3 className="text-sm font-medium text-gray-500">Estado</h3>
-                  <span className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                    course.isActive 
+                  <span className={`mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${course.isActive 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-gray-100 text-gray-800'
                   }`}>
@@ -125,7 +124,7 @@ export default function CursoDetallePage() {
               
               <div className="mt-6">
                 <Link
-                  href={`/cursos/${course.id}/equipos`}
+                  href={`/cursos/${course.idCourse}/equipos`}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-2 px-4 rounded-lg font-medium transition-colors block"
                 >
                   Gestionar Equipos
@@ -143,7 +142,7 @@ export default function CursoDetallePage() {
                     Equipos del Curso ({teams.length})
                   </h2>
                   <Link
-                    href={`/cursos/${course.id}/equipos/crear`}
+                    href={`/cursos/${course.idCourse}/equipos/crear`}
                     className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg font-medium transition-colors"
                   >
                     + Crear Equipo
@@ -194,7 +193,7 @@ export default function CursoDetallePage() {
                       
                       <div className="flex space-x-2">
                         <Link
-                          href={`/cursos/${course.id}/equipos/${team.id}`}
+                          href={`/cursos/${course.idCourse}/equipos/${team.id}`}
                           className="text-blue-600 hover:text-blue-800 text-sm font-medium"
                         >
                           Ver Detalles
@@ -216,7 +215,7 @@ export default function CursoDetallePage() {
                   </p>
                   <div className="mt-6">
                     <Link
-                      href={`/cursos/${course.id}/equipos/crear`}
+                      href={`/cursos/${course.idCourse}/equipos/crear`}
                       className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                     >
                       Crear Primer Equipo

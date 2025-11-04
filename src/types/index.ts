@@ -1,4 +1,4 @@
-﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
+﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
 
 // Tipos de autenticación
 export interface LoginRequest {
@@ -133,50 +133,90 @@ export const SOFTWARE_ENGINEERING_COURSES = [
   {
     idCourse: 1,
     nameCourse: "Fundamentos de Programación",
+    description: "Curso introductorio a la programación y lógica de algoritmos.",
     semester: 1,
-    status: true
+    status: true,
+    professor: "Profesor A",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 2,
     nameCourse: "Estructuras de Datos",
+    description: "Estudio de estructuras de datos fundamentales y su aplicación.",
     semester: 2,
-    status: true
+    status: true,
+    professor: "Profesor B",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 3,
     nameCourse: "Algoritmos y Complejidad",
+    description: "Análisis de algoritmos y su complejidad computacional.",
     semester: 3,
-    status: true
+    status: true,
+    professor: "Profesor C",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 4,
     nameCourse: "Ingeniería de Software I",
+    description: "Principios y prácticas de la ingeniería de software.",
     semester: 4,
-    status: true
+    status: true,
+    professor: "Profesor D",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 5,
     nameCourse: "Bases de Datos",
+    description: "Diseño y gestión de sistemas de bases de datos.",
     semester: 4,
-    status: true
+    status: true,
+    professor: "Profesor E",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 6,
     nameCourse: "Ingeniería de Software II",
+    description: "Temas avanzados en ingeniería de software y gestión de proyectos.",
     semester: 5,
-    status: true
+    status: true,
+    professor: "Profesor F",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 7,
     nameCourse: "Arquitectura de Software",
+    description: "Diseño de arquitecturas de software robustas y escalables.",
     semester: 6,
-    status: true
+    status: true,
+    professor: "Profesor G",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   },
   {
     idCourse: 8,
     nameCourse: "Proyecto de Grado",
+    description: "Desarrollo de un proyecto de software completo.",
     semester: 8,
-    status: true
+    status: true,
+    professor: "Profesor H",
+    minTeamSize: 2,
+    maxTeamSize: 3,
+    isActive: true
   }
 ] as const;
 

@@ -4,24 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import NavBar from '../../../../components/layout/NavBar';
-import { SOFTWARE_ENGINEERING_COURSES } from '@/types';
+import { SOFTWARE_ENGINEERING_COURSES, Team, Student } from '@/types';
 import EditTeamModal from '@/components/equipos/EditTeamModal';
-
-interface TeamWithDetails {
-  id: string;
-  name: string;
-  members: {
-    id: string;
-    name: string;
-    email: string;
-    skills: string[];
-  }[];
-  project: string;
-  progress: number;
-  status: 'forming' | 'active' | 'completed';
-  createdAt: Date;
-  frontend: string;
-}
 
 export default function EquiposPage() {
   const params = useParams();
@@ -32,65 +16,61 @@ export default function EquiposPage() {
   // Estado para modal de creación y edición
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<TeamWithDetails | null>(null);
+  const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [newTeamName, setNewTeamName] = useState('');
   
   // Datos mock para equipos
-  const [teams, setTeams] = useState<TeamWithDetails[]>([
+  const [teams, setTeams] = useState<Team[]>([
     {
       id: '1',
       name: 'Equipo Alpha',
+      courseId: courseId,
+      creatorId: '1',
+      projectId: 'proj1',
       members: [
-        { id: '1', name: 'Juan Pérez', email: 'juan.perez@udea.edu.co', skills: ['React', 'Node.js'] },
-        { id: '2', name: 'María García', email: 'maria.garcia@udea.edu.co', skills: ['Python', 'Django'] },
-        { id: '3', name: 'Carlos López', email: 'carlos.lopez@udea.edu.co', skills: ['Java', 'Spring'] }
+        { id: '1', name: 'Juan Pérez', email: 'juan.perez@udea.edu.co' },
+        { id: '2', name: 'María García', email: 'maria.garcia@udea.edu.co' },
+        { id: '3', name: 'Carlos López', email: 'carlos.lopez@udea.edu.co' }
       ],
-      project: 'Sistema de Gestión Académica',
-      progress: 75,
-      status: 'active' as const,
-      createdAt: new Date('2024-01-15'),
-      frontend: 'React + TypeScript'
+      createdAt: new Date('2024-01-15')
     },
     {
       id: '2',
       name: 'Equipo Beta',
+      courseId: courseId,
+      creatorId: '4',
+      projectId: 'proj2',
       members: [
-        { id: '4', name: 'Ana Rodríguez', email: 'ana.rodriguez@udea.edu.co', skills: ['Vue.js', 'PHP'] },
-        { id: '5', name: 'Luis Martínez', email: 'luis.martinez@udea.edu.co', skills: ['Angular', 'C#'] }
+        { id: '4', name: 'Ana Rodríguez', email: 'ana.rodriguez@udea.edu.co' },
+        { id: '5', name: 'Luis Martínez', email: 'luis.martinez@udea.edu.co' }
       ],
-      project: 'Aplicación Móvil para Biblioteca',
-      progress: 45,
-      status: 'forming' as const,
-      createdAt: new Date('2024-01-20'),
-      frontend: 'Vue.js + Nuxt'
+      createdAt: new Date('2024-01-20')
     },
     {
       id: '3',
       name: 'Equipo Gamma',
+      courseId: courseId,
+      creatorId: '6',
+      projectId: 'proj3',
       members: [
-        { id: '6', name: 'Elena Ruiz', email: 'elena.ruiz@udea.edu.co', skills: ['React', 'GraphQL'] },
-        { id: '7', name: 'Jorge Pérez', email: 'jorge.perez@udea.edu.co', skills: ['Next.js', 'MongoDB'] },
-        { id: '8', name: 'Roberto Silva', email: 'roberto.silva@udea.edu.co', skills: ['TypeScript', 'AWS'] }
+        { id: '6', name: 'Elena Ruiz', email: 'elena.ruiz@udea.edu.co' },
+        { id: '7', name: 'Jorge Pérez', email: 'jorge.perez@udea.edu.co' },
+        { id: '8', name: 'Roberto Silva', email: 'roberto.silva@udea.edu.co' }
       ],
-      project: 'Portal de Estudiantes',
-      progress: 90,
-      status: 'completed' as const,
-      createdAt: new Date('2024-01-10'),
-      frontend: 'Next.js + TypeScript'
+      createdAt: new Date('2024-01-10')
     }
   ]);
 
   const handleCreateTeam = () => {
     if (newTeamName.trim()) {
-      const newTeam = {
+      const newTeam: Team = {
         id: Date.now().toString(),
         name: newTeamName.trim(),
+        courseId: courseId,
+        creatorId: 'current-user-id', // Reemplazar con el ID del usuario logueado
+        projectId: 'new-project-id',
         members: [],
-        project: 'Proyecto sin asignar',
-        progress: 0,
-        status: 'forming' as const,
-        createdAt: new Date(),
-        frontend: 'Por definir'
+        createdAt: new Date()
       };
       setTeams([...teams, newTeam]);
       setNewTeamName('');
@@ -98,12 +78,12 @@ export default function EquiposPage() {
     }
   };
 
-  const handleEditTeam = (team: TeamWithDetails) => {
+  const handleEditTeam = (team: Team) => {
     setSelectedTeam(team);
     setShowEditModal(true);
   };
 
-  const handleSaveTeam = (updatedTeam: TeamWithDetails) => {
+  const handleSaveTeam = (updatedTeam: Team) => {
     setTeams(teams.map(team => 
       team.id === updatedTeam.id ? { ...updatedTeam, createdAt: team.createdAt } : team
     ));
@@ -112,13 +92,13 @@ export default function EquiposPage() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'forming':
+    switch (status) { // Asumiendo que el tipo Team tendrá un 'status'
+      case 'forming': 
         return 'bg-yellow-100 text-yellow-800';
       case 'active':
         return 'bg-blue-100 text-blue-800';
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800'; 
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -126,13 +106,13 @@ export default function EquiposPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'forming':
+      case 'forming': 
         return 'En Formación';
       case 'active':
         return 'Activo';
       case 'completed':
         return 'Completado';
-      default:
+      default: 
         return 'Desconocido';
     }
   };
@@ -172,7 +152,7 @@ export default function EquiposPage() {
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
                     <Link href={`/cursos/${courseId}`} className="text-gray-700 hover:text-blue-600 ml-1 md:ml-2">
-                      {course.name}
+                      {course.nameCourse}
                     </Link>
                   </div>
                 </li>
@@ -193,7 +173,7 @@ export default function EquiposPage() {
                   Gestión de Equipos
                 </h1>
                 <p className="mt-2 text-lg text-gray-600">
-                  {course.name} - {teams.length} equipos registrados
+                  {course.nameCourse} - {teams.length} equipos registrados
                 </p>
               </div>
               
@@ -292,8 +272,8 @@ export default function EquiposPage() {
                     <h3 className="text-xl font-semibold text-gray-900">
                       {team.name}
                     </h3>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(team.status)}`}>
-                      {getStatusText(team.status)}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor('active')}`}>
+                      {getStatusText('active')}
                     </span>
                   </div>
                   
@@ -322,23 +302,18 @@ export default function EquiposPage() {
               <div className="px-6 py-4">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-500 mb-2">Proyecto</h4>
-                    <p className="text-gray-900">{team.project}</p>
-                    
-                    <h4 className="text-sm font-medium text-gray-500 mt-4 mb-2">Frontend</h4>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      {team.frontend}
-                    </span>
+                    <h4 className="text-sm font-medium text-gray-500 mb-2">Proyecto Asignado</h4>
+                    <p className="text-gray-900">{team.projectId}</p>
                     
                     <div className="mt-4">
                       <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
                         <span>Progreso del Proyecto</span>
-                        <span>{team.progress}%</span>
+                        <span>{50}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300" 
-                          style={{ width: `${team.progress}%` }}
+                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `50%` }}
                         ></div>
                       </div>
                     </div>
@@ -346,7 +321,7 @@ export default function EquiposPage() {
                   
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-3">
-                      Miembros del Equipo ({team.members.length}/{course.maxTeamSize})
+                      Miembros del Equipo ({team.members.length}/{course?.maxTeamSize || 3})
                     </h4>
                     
                     {team.members.length > 0 ? (
@@ -366,16 +341,6 @@ export default function EquiposPage() {
                               </p>
                               <p className="text-sm text-gray-500">
                                 {member.email}
-                              </p>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {member.skills.map((skill, index) => (
-                                  <span 
-                                    key={index}
-                                    className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800"
-                                  >
-                                    {skill}
-                                  </span>
-                                ))}
                               </div>
                             </div>
                           </div>
@@ -387,7 +352,7 @@ export default function EquiposPage() {
                       </p>
                     )}
                     
-                    {team.members.length < course.maxTeamSize && (
+                    {course && team.members.length < course.maxTeamSize && (
                       <button 
                         onClick={() => handleEditTeam(team)}
                         className="mt-3 w-full border-2 border-dashed border-gray-300 rounded-lg py-2 px-4 text-sm text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors"
@@ -426,36 +391,17 @@ export default function EquiposPage() {
       {/* Modal de edición de equipo */}
       {showEditModal && selectedTeam && (
         <EditTeamModal
-          team={{
-            id: selectedTeam.id,
-            name: selectedTeam.name,
-            courseId: courseId,
-            members: selectedTeam.members,
-            projectId: undefined,
-            status: selectedTeam.status,
-            createdAt: selectedTeam.createdAt,
-            updatedAt: new Date()
-          }}
+          team={selectedTeam}
           isOpen={showEditModal}
           onClose={() => {
             setShowEditModal(false);
             setSelectedTeam(null);
           }}
           onSave={(updatedTeam) => {
-            const teamUpdate: TeamWithDetails = {
-              id: updatedTeam.id,
-              name: updatedTeam.name,
-              members: updatedTeam.members,
-              project: selectedTeam.project,
-              progress: selectedTeam.progress,
-              status: selectedTeam.status,
-              createdAt: selectedTeam.createdAt,
-              frontend: selectedTeam.frontend
-            };
-            handleSaveTeam(teamUpdate);
+            handleSaveTeam(updatedTeam);
           }}
-          maxTeamSize={course.maxTeamSize}
-          minTeamSize={course.minTeamSize}
+          maxTeamSize={course?.maxTeamSize || 3}
+          minTeamSize={course?.minTeamSize || 2}
         />
       )}
 
