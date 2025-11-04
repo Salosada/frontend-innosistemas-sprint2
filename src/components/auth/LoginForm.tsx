@@ -65,6 +65,9 @@ export default function LoginForm() {
         case 'student':
           router.push('/dashboard/student');
           break;
+        case 'professor': // Añadir redirección específica para el rol de profesor
+          router.push('/dashboard/professor');
+          break;
         default:
           router.push('/dashboard');
       }

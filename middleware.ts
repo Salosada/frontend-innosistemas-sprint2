@@ -30,13 +30,15 @@ export function middleware(req: NextRequest) {
 
   const isAdmin = role === 'admin' || role === 'Administrador';
   const isStudent = role === 'student' || role === 'Estudiante';
+  const isProfessor = role === 'professor' || role === 'Profesor';
 
   // Si el usuario ya está autenticado y está en login/registro, redirigir al dashboard por rol
   const isAuthPage = pathname === '/auth/login' || pathname === '/auth/register';
   if (token && isAuthPage) {
     const redirect = req.nextUrl.clone();
     redirect.pathname = isAdmin ? '/dashboard/admin'
-      : isStudent ? '/dashboard/student'
+      : isStudent ? '/dashboard/student' // Añadir redirección para profesor
+      : isProfessor ? '/dashboard/professor'
       : '/dashboard';
     return NextResponse.redirect(redirect);
   }
@@ -44,8 +46,9 @@ export function middleware(req: NextRequest) {
   // Si el usuario ya está autenticado y entra a la raíz '/', redirigir a su dashboard
   if (token && pathname === '/') {
     const redirect = req.nextUrl.clone();
-    redirect.pathname = isAdmin ? '/dashboard/admin'
+    redirect.pathname = isAdmin ? '/dashboard/admin' // Añadir redirección para profesor
       : isStudent ? '/dashboard/student'
+      : isProfessor ? '/dashboard/professor'
       : '/dashboard';
     return NextResponse.redirect(redirect);
   }
@@ -71,7 +74,15 @@ export function middleware(req: NextRequest) {
 
   // Validar guardas por rol
   const guard = ROLE_GUARDS.find((g) => pathname.startsWith(g.prefix));
-  if (guard && !isAdmin) { // Asumiendo que el guard es para 'admin'
+  if (guard) {
+    // Si el guard es para admin y el usuario no es admin, redirigir
+    if (guard.role === 'admin' && !isAdmin) {
+      const dashUrl = req.nextUrl.clone();
+      dashUrl.pathname = '/dashboard';
+      return NextResponse.redirect(dashUrl);
+    }
+    // Aquí podrías añadir lógica similar para otros roles si tuvieras guards específicos
+    // Por ejemplo: if (guard.role === 'professor' && !isProfessor) { ... }
     const dashUrl = req.nextUrl.clone();
     dashUrl.pathname = '/dashboard';
     return NextResponse.redirect(dashUrl);
