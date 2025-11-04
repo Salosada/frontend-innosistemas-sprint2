@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Team, Student } from '@/types';
+import { Team } from '@/types';
 
 interface TeamActionsModalProps {
   isOpen: boolean;

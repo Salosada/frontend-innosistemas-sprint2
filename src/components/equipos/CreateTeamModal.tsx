@@ -84,7 +84,7 @@ export default function CreateTeamModal({
     if (isOpen) {
       validateTeam();
     }
-  }, [selectedMembers, teamName, isOpen, validateTeam]);
+  }, [selectedMembers, teamName, isOpen, validateTeam]); // Dependencia 'validateTeam' añadida
 
   const handleToggleMember = (student: Student) => {
     setSelectedMembers(prev => {
@@ -95,10 +95,10 @@ export default function CreateTeamModal({
         return prev.filter(m => m.id !== student.id);
       } else {
         // Agregar al equipo si no se supera el máximo
-        if (prev.length + 1 >= maxTeamSize) { // Se usa >= porque el creador no cuenta en `prev`
-          return prev; // No agregar si ya se alcanzó el máximo
+        if (prev.length + 1 < maxTeamSize) { // Lógica corregida
+          return [...prev, student];
         }
-        return [...prev, student];
+        return prev; // No agregar si ya se alcanzó el máximo
       }
     });
   };

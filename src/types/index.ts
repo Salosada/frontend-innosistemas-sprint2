@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿// Tipos para el sistema Innosistemas - Adaptados al backend Java Spring Boot
 
 // Tipos de autenticación
 export interface LoginRequest {
@@ -50,6 +50,7 @@ export interface UserWithRoleDto {
   nameUser: string;
   createdAt?: string; // Añadido para la fecha de creación del usuario
   role: string;
+  permissions?: Permission[]; // Añadido para que coincida con UserInfo y el backend
 }
 
 export interface CreateUserDto {

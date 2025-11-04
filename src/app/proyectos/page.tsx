@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { TeamsService } from '@/services/teams';
-import { CreateTeamForm } from '@/types';
+import { CreateTeamForm, TeamShowDto } from '@/types';
 
 // Lista global de proyectos (esto podría venir también de una API)
 const GLOBAL_PROJECTS = [
@@ -47,7 +47,7 @@ export default function ProyectosPage() {
     setLoading(true);
     setError(null);
     try {
-      const allTeams = await TeamsService.getAllTeams();
+      const allTeams: TeamShowDto[] = await TeamsService.getAllTeams();
       // Filtrar equipos por proyecto seleccionado
       const projectTeams = allTeams
         .filter(team => team.projectId === selectedProjectId)

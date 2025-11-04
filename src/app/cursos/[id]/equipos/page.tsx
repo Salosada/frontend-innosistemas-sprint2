@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation'; // Mantener este import
+import { useParams } from 'next/navigation';
 import NavBar from '../../../../components/layout/NavBar';
-import { SOFTWARE_ENGINEERING_COURSES, Team } from '@/types';
+import { SOFTWARE_ENGINEERING_COURSES, Team } from '@/types'; // Student no se usa
 import EditTeamModal from '@/components/equipos/EditTeamModal';
 import CreateTeamModal from '@/components/equipos/CreateTeamModal';
 
