@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AuthService } from '@/services/auth';
+import { SOFTWARE_ENGINEERING_COURSES } from '@/types';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
